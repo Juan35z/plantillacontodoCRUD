@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View, ScrollView, Linking, TouchableOpacity, TextInput, Alert } from "react-native";
+import { StyleSheet, Text, View, ScrollView, ActivityIndicator, Linking, TouchableOpacity, TextInput, Alert } from "react-native";
 import {Ionicons} from '@expo/vector-icons'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 function InventarioScreen() {
   const [codigo, setCodigo] = useState('');
   const [nombre, setNombre] = useState('');
@@ -373,6 +373,78 @@ recordar pequeñas cosas:
     </ScrollView>
   );
       }
+      function API() {
+        const [data, setData] = useState([]);
+        const [loading, setLoading] = useState(true);
+        useEffect(() => {
+          fetch('https://mi-api.com.mx/API.php?action=productos')
+          .then(response => response.json())
+          .then(json => {
+            setData(json);
+            setLoading(false);
+          });
+        }, []);
+        if(loading) {
+          return <ActivityIndicator/>
+        }
+        return(
+          <ScrollView
+  style={{ backgroundColor: "#F8BE00", flex: 1 }}
+  contentContainerStyle={{
+    flex: 1,
+  }}
+>
+      {data.map((item, index) => (
+              <View key={index} style={styles.card}>
+                <Text style={styles.cardTitle}>ID: {item.id}</Text>
+                <Text>Fecha: {item.fecha}</Text>
+                <Text>Codigo: {item.codigo}</Text>
+                <Text>Nombre: {item.nombre}</Text>
+                <Text>Unidad: {item.unidad}</Text>
+                <Text>Precio: {item.precio}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        );
+      }
+      function APIV(){
+        const [data, setData] = useState([]);
+        const [loading, setLoading] = useState(true);
+        useEffect(() => {
+          fetch('https://mi-api.com.mx/API.php?action=ventas')
+          .then(response => response.json())
+          .then(json => {
+            setData(json);
+            setLoading(false);
+          })
+          .catch(error => {
+            console.error(error);
+            setLoading(false);
+          })
+        }, []);
+        if(loading) {
+          return <ActivityIndicator/>
+        }
+        return(
+          <ScrollView
+  style={{ backgroundColor: "#F8BE00", flex: 1 }}
+  contentContainerStyle={{
+    flex: 1,
+  }}
+>
+            {data.map((item, index) => (
+              <View key={index} style={styles.card}>
+                <Text style={styles.cardTitle}>ID: {item.Id}</Text>
+                <Text>Fecha: {item.Fecha}</Text>
+                <Text>Codigo: {item.Codigo}</Text>
+                <Text>Nombre: {item.Nombre}</Text>
+                <Text>Unidad: {item.Unidad}</Text>
+                <Text>Precio: {item.Precio}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        );
+      }
 const Tab = createBottomTabNavigator();
 function TabNavigator() {
   return (
@@ -440,6 +512,26 @@ export default function InventarioTabs() {
             ),
           }}
         />
+        <DrawerNav.Screen
+        name='API'
+        component={API}
+        options={{
+          title: 'Registro del Inventario',
+          drawerIcon: ({color, size}) => (
+            <Ionicons name='file-tray-full-outline' size={size} color={color}/>
+          ),
+        }}
+        />
+        <DrawerNav.Screen
+        name="APIV"
+        component={APIV}
+        options={{
+          title: 'Historial de Ventas',
+          drawerIcon: ({color, size}) => (
+            <Ionicons name='file-tray-full-outline' size={size} color={color}/>
+          ),
+        }}
+        />
       </DrawerNav.Navigator>
 );
 }
@@ -456,6 +548,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#2B2B2B',
+  },
+    card: {
+    backgroundColor: '#F8BE00',
+    marginBottom: 10,
+    borderRadius: 10,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  cardTitle: { 
+    fontWeight: "bold", 
+    fontSize: 16, 
+    marginBottom: 5 
   },
     content: {
         fontSize: 16,
