@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, StyleSheet, TextInput, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, TextInput, Text, TouchableOpacity, View, FlatList } from "react-native";
 export default function Bodeguero () {
   const [codigo, setCodigo] = useState('');
   const [nombre, setNombre] = useState('');

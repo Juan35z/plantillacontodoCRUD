@@ -29,7 +29,7 @@ export default function Trabajador() {
     setGramos('');
     setPrecio('');
   };
-  const confrimarVenta = async() => {
+  const confirmarVenta = async() => {
     if(carrito.length === 0) {
       Alert.alert('No hay productos');
       return;
